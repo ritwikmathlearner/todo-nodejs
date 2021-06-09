@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Home
+        link(rel="stylesheet", href="./assets/style.css")
+    body 
+        #container
+            form#form(action="/todo", method="post")
+                label(for="taskname") Task Name
+                input(type="text", name="taskname", id="name")
+                br
+                input(type="button", id="btn", value="Create")  
+            #tasks
+                each element, index in todos 
+                    .task
+                        p #{element.name} 
+                        span.delete(value=element.name) +
