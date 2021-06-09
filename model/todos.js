@@ -1,11 +1,13 @@
+const { throws } = require('assert')
 const fs = require('fs')
 const path = require('path')
 
 const filePath = path.join(process.cwd(), 'model', 'data.json')
 
 class ToDo {
-    constructor(name){
+    setName(name) {
         this.name = name
+        return this
     }
 
     getAll() {
@@ -14,7 +16,10 @@ class ToDo {
     }
 
     save() {
-
+        let self = this
+        let listArr = self.getAll()
+        listArr.push({"name":this.name})
+        fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
 }
 

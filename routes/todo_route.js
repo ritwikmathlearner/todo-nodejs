@@ -1,10 +1,10 @@
 const express = require('express')
-const todo = require('../model/todos')
+const { getTodos, saveTodos } = require('../controllers/todos')
 
 const router = express.Router()
 
-router.get('/', (req, res, next) => {
-    res.render('list', {"todos": todo.getAll()})
-})
+router.get('/', getTodos)
+
+router.post('/todo', saveTodos)
 
 module.exports = router;

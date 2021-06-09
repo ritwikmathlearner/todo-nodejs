@@ -46,7 +46,7 @@ body {
     outline: none;
 }
 
-#form input[type="button"] {
+#form input[type="submit"] {
     padding: 0.5rem 2rem;
     border: none;
     cursor: pointer;
@@ -63,11 +63,11 @@ body {
     font-family: "Crete Round", serif;
 }
 
-#form input[type="button"]:hover {
+#form input[type="submit"]:hover {
     box-shadow: -3px -3px 5px 0 #222, 3px 3px 5px 0 #000;
 }
 
-#form input[type="button"]:active {
+#form input[type="submit"]:active {
     box-shadow: inset -1px -1px 2px 0 #222, inset 1px 1px 2px 0 #000;
     color: #444;
 }
