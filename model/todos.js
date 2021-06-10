@@ -21,6 +21,13 @@ class ToDo {
         listArr.push({"name":this.name})
         fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
+
+    delete() {
+        let self = this
+        let listArr = self.getAll()
+        let newArr = listArr.filter(element => element.name !== this.name)
+        fs.writeFileSync(filePath, JSON.stringify(newArr))
+    }
 }
 
 module.exports = new ToDo

@@ -6,9 +6,14 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 body {
     height: 100vmin;
-    width: 100vw;
     font-weight: 300;
     display: flex;
     justify-content: center;
@@ -19,7 +24,7 @@ body {
 
 #container {
     width: 50%;
-    height: 70vmin;
+    height: 70vh;
     background: #03071e;
     padding: 2rem;
     border-radius: 10px;
