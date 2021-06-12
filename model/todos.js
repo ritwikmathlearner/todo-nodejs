@@ -20,9 +20,10 @@ class ToDo {
     save() {
         let self = this
         let listArr = self.getAll()
-        listArr.push({
-            "name": this.name
-        })
+        if (this.name.trim() !== '' && notExists(listArr, this.name))
+            listArr.push({
+                "name": this.name
+            })
         fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
 
@@ -36,10 +37,14 @@ class ToDo {
     update(value) {
         let self = this
         let listArr = self.getAll()
+    
+        if (exists(listArr, value)) {
+            throw 500
+        }
+
         let newArr = listArr.map(element => {
-            let diff = findDiff(this.name,element.name);
-            console.log(diff == '')
-            if (diff == '') {
+            console.log(this.name.toString().trim(), element.name.toString().trim())
+            if (this.name.toString().trim() === element.name.toString().trim()) {
                 return {
                     "name": value
                 }
@@ -48,16 +53,16 @@ class ToDo {
             }
         })
         fs.writeFileSync(filePath, JSON.stringify(newArr))
+        return true
     }
 }
 
-function findDiff(str1, str2) {
-    let diff = "";
-    str2.split('').forEach(function (val, i) {
-        if (val != str1.charAt(i))
-            diff += val;
-    });
-    return diff;
+function exists(arr, data) {
+    let newArr = arr.filter(element => element.name === data)
+    if (newArr.length == 0) {
+        return false
+    }
+    return true
 }
 
 module.exports = new ToDo

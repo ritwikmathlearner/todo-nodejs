@@ -18,7 +18,7 @@ html(lang="en")
                 each element, index in todos 
                     .task
                         p #{element.name} 
-                        input(type="text", name="taskname", style="display:none" value=element.name)
+                        input(type="text", name="taskname", style="display:none")
                         span.edit
                             i.fas.fa-edit
                         span.delete(value=element.name) +
