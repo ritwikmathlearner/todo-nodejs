@@ -132,3 +132,10 @@ span.edit {
     color: #EE6123;
     margin-left: 10px;
 }
+
+.task > input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}

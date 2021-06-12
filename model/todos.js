@@ -20,10 +20,11 @@ class ToDo {
     save() {
         let self = this
         let listArr = self.getAll()
-        if (this.name.trim() !== '' && notExists(listArr, this.name))
-            listArr.push({
-                "name": this.name
-            })
+        if (this.name.trim() === '' || exists(listArr, this.name))
+            return
+        listArr.push({
+            "name": this.name
+        })
         fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
 
@@ -37,7 +38,7 @@ class ToDo {
     update(value) {
         let self = this
         let listArr = self.getAll()
-    
+
         if (exists(listArr, value)) {
             throw 500
         }

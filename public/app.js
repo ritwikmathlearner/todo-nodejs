@@ -2,28 +2,46 @@ document.getElementById('btn').addEventListener('click', e => {
     let taskName = document.getElementById('name').value
 
     if (taskName === "") {
-        alert("Task name cannot be empty")
+        swal({
+            title: "Task name cannot be empty",
+            icon: "error"
+        })
         e.preventDefault();
     }
 
     return true;
 })
 
-document.getElementById('tasks').addEventListener('click', e => {
+document.getElementById('tasks').addEventListener('click', async e => {
     let name = '';
     if (e.target.classList.contains('delete')) {
         name = e.target.getAttribute('value')
-        fetch('http://localhost:3000/todo', {
-            method: 'DELETE',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
-                "taskname": name
+        try {
+            let response = await fetch('http://localhost:3000/todo', {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    "taskname": name
+                })
             })
-        }).then(data => {
+
+            if (response.status !== 202)
+                throw new Error('Delete unsuccessful')
+
             e.target.parentElement.remove()
-        }).catch(err => console.log(1))
+            swal({
+                icon: "success",
+                timer: 1200,
+            });
+        } catch (error) {
+            swal({
+                title: error.message,
+                icon: "error",
+                timer: 1200,
+            })
+        }
     }
     if (e.target.classList.contains('fas')) {
         let paragraph = e.target.parentElement.parentElement.querySelector('p')
@@ -31,7 +49,7 @@ document.getElementById('tasks').addEventListener('click', e => {
         updateParagraph(name, [paragraph, inputField])
         name = paragraph.innerHTML.trim()
         inputField.value = name
-        inputField.addEventListener('keypress', e => {
+        inputField.addEventListener('keypress', async e => {
             if (e.key === 'Enter') {
                 let newValue = inputField.value;
                 if (newValue.toString().trim() === name.toString().trim()) {
@@ -42,22 +60,25 @@ document.getElementById('tasks').addEventListener('click', e => {
                 let content = newValue + ` <span class="wait"><i class="far fa-clock"></i></span>`
                 updateParagraph(content, [paragraph, inputField], true)
 
-                fetch('http://localhost:3000/todo', {
-                    method: 'PATCH',
-                    headers: new Headers({
-                        'Content-Type': 'application/json'
-                    }),
-                    body: JSON.stringify({
-                        "oldname": name,
-                        "newname": newValue
+                try {
+                    const response = await fetch('http://localhost:3000/todo', {
+                        method: 'PATCH',
+                        headers: new Headers({
+                            'Content-Type': 'application/json'
+                        }),
+                        body: JSON.stringify({
+                            "oldname": name,
+                            "newname": newValue
+                        })
                     })
-                }).then(response => {
+
                     if (response.status !== 202)
                         throw new Error('Update not successful')
+
                     setTimeout(() => {
                         paragraph.querySelector('span').remove()
                     }, 1000)
-                }).catch(err => {
+                } catch (error) {
                     setTimeout(() => {
                         paragraph.querySelector('i').classList.remove("far", "fa-clock")
                         paragraph.querySelector('i').classList.add("fas", "fa-exclamation")
@@ -65,7 +86,7 @@ document.getElementById('tasks').addEventListener('click', e => {
                     setTimeout(() => {
                         paragraph.innerHTML = name
                     }, 1000)
-                })
+                }
             }
         })
     }
