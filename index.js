@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
+const { mongoConnect } = require('./database/database')
 
 const todoRoute = require('./routes/todo_route')
 
@@ -17,5 +18,6 @@ app.set('view engine', 'pug')
 
 app.use(todoRoute);
 
-
-app.listen(3000)
+mongoConnect(() => {
+    app.listen(3000)
+})

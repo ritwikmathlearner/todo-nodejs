@@ -1,12 +1,14 @@
 const todo = require('../model/todos')
 
 exports.getTodos = (req, res, next) => {
-    res.render('list', {"todos": todo.getAll()})
+    todo.setDB().getAll().then(toDos => {
+        res.render('list', {"todos": toDos})
+    })
 }
 
 exports.saveTodos = (req, res, next) => {
     let name = req.body.taskname;
-    todo.setName(name).save()
+    todo.setDB().setName(name).save()
     res.redirect('/')
 }
 

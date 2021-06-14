@@ -1,31 +1,44 @@
-const {
-    throws
-} = require('assert')
 const fs = require('fs')
 const path = require('path')
+const { mongoConnect, getDB } = require('../database/database')
 
-const filePath = path.join(process.cwd(), 'model', 'data.json')
+
+const filePath = path.join(process.cwd(), 'model', 'todo.json')
 
 class ToDo {
+    setDB() {
+        this.items = getDB().collection('item')
+        return this
+    }
+
     setName(name) {
         this.name = name
         return this
     }
 
-    getAll() {
-        let data = fs.readFileSync(filePath, "utf-8")
-        return JSON.parse(data)
+    async getAll() {
+        try {
+            return await this.items.find({}).toArray()
+        } catch(err) {
+            console.log(err)
+        }
+        return
     }
 
-    save() {
-        let self = this
-        let listArr = self.getAll()
-        if (this.name.trim() === '' || exists(listArr, this.name))
-            return
-        listArr.push({
-            "name": this.name
-        })
-        fs.writeFileSync(filePath, JSON.stringify(listArr))
+    async save() {
+        try {
+            const result = await this.items.insertOne({name:this.name})
+        } catch (err) {
+            console.log(err)
+        }
+        // let self = this
+        // let listArr = self.getAll()
+        // if (this.name.trim() === '' || exists(listArr, this.name))
+        //     return
+        // listArr.push({
+        //     "name": this.name
+        // })
+        // fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
 
     delete() {
