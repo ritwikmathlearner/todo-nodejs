@@ -17,8 +17,10 @@ html(lang="en")
             #tasks
                 each element, index in todos 
                     .task
-                        p #{element.name} 
-                        input(type="text", name="taskname", style="display:none")
+                        p #{element.name}
+                        #edit-container(style="display:none")
+                            input(type="text", name="taskname")
+                            i(class="fas fa-undo-alt restore-todo")
                         span.edit
                             i.fas.fa-edit
                         span.delete(value=element.name) +

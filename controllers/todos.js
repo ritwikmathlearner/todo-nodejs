@@ -15,7 +15,11 @@ exports.saveTodos = (req, res, next) => {
 exports.deleteTodo = (req, res, next) => {
     try {
         let name = req.body.taskname;
-        todo.setName(name).delete()
+        let result  = todo.setDB().setName(name).delete()
+        
+        if(!result)
+            throw new Error('Delete unsuccessful')
+
         res.status(202).json("Deleted successfully")
     } catch(err) {
         res.status(500).json("Delete unsuccessful")
@@ -26,9 +30,15 @@ exports.updateTodo = (req, res, next) => {
     try {
         let name = req.body.oldname
         let newName = req.body.newname
-        todo.setName(name).update(newName)
+        
+        let result = todo.setDB().setName(name).update(newName)
+        
+        if(!result)
+            throw new Error('Update unsuccessful')
+
         res.status(202).json("Updated successfully")
     } catch(err) {
+        console.log(err)
         res.status(500).json("Update unsuccessful")
     }
     res.end()

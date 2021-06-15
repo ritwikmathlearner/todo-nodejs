@@ -133,9 +133,15 @@ span.edit {
     margin-left: 10px;
 }
 
-.task > input {
+.task > #edit-container > input {
     padding: 0.5rem;
     border-radius: 5px;
     border: none;
     outline: none;
+}
+
+.restore-todo {
+    margin-left: 10px;
+    color: #EE6123;
+    cursor: pointer;
 }

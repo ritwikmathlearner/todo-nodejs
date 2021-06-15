@@ -43,22 +43,30 @@ document.getElementById('tasks').addEventListener('click', async e => {
             })
         }
     }
-    if (e.target.classList.contains('fas')) {
+    if (e.target.classList.contains('restore-todo')) {
         let paragraph = e.target.parentElement.parentElement.querySelector('p')
         let inputField = e.target.parentElement.parentElement.querySelector('input')
-        updateParagraph(name, [paragraph, inputField])
+        let editContainer = e.target.parentElement.parentElement.querySelector('#edit-container')
+        name = inputField.value
+        updateParagraph(name, [paragraph, editContainer], true)
+    }
+    if (e.target.classList.contains('fa-edit')) {
+        let paragraph = e.target.parentElement.parentElement.querySelector('p')
+        let inputField = e.target.parentElement.parentElement.querySelector('input')
+        let editContainer = e.target.parentElement.parentElement.querySelector('#edit-container')
+        updateParagraph(name, [paragraph, editContainer])
         name = paragraph.innerHTML.trim()
         inputField.value = name
         inputField.addEventListener('keypress', async e => {
             if (e.key === 'Enter') {
                 let newValue = inputField.value;
                 if (newValue.toString().trim() === name.toString().trim()) {
-                    updateParagraph(name, [paragraph, inputField], true)
+                    updateParagraph(name, [paragraph, editContainer], true)
                     return
                 }
 
                 let content = newValue + ` <span class="wait"><i class="far fa-clock"></i></span>`
-                updateParagraph(content, [paragraph, inputField], true)
+                updateParagraph(content, [paragraph, editContainer], true)
 
                 try {
                     const response = await fetch('http://localhost:3000/todo', {
@@ -93,16 +101,16 @@ document.getElementById('tasks').addEventListener('click', async e => {
 })
 
 const updateParagraph = (data, domArray, hideInput = false) => {
-    [paragraph, inputField] = domArray
+    [paragraph, editContainer] = domArray
 
     if (hideInput) {
         paragraph.style.display = "block"
-        inputField.style.display = "none"
+        editContainer.style.display = "none"
         paragraph.innerHTML = data.toString()
         return
     }
 
     paragraph.style.display = "none"
-    inputField.style.display = "inline-block"
+    editContainer.style.display = "inline-block"
     return
 }

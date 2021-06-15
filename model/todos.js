@@ -1,6 +1,9 @@
 const fs = require('fs')
 const path = require('path')
-const { mongoConnect, getDB } = require('../database/database')
+const {
+    mongoConnect,
+    getDB
+} = require('../database/database')
 
 
 const filePath = path.join(process.cwd(), 'model', 'todo.json')
@@ -19,7 +22,7 @@ class ToDo {
     async getAll() {
         try {
             return await this.items.find({}).toArray()
-        } catch(err) {
+        } catch (err) {
             console.log(err)
         }
         return
@@ -27,47 +30,59 @@ class ToDo {
 
     async save() {
         try {
-            const result = await this.items.insertOne({name:this.name})
+            const result = await this.items.insertOne({
+                name: this.name
+            })
         } catch (err) {
             console.log(err)
         }
-        // let self = this
-        // let listArr = self.getAll()
-        // if (this.name.trim() === '' || exists(listArr, this.name))
-        //     return
-        // listArr.push({
-        //     "name": this.name
-        // })
-        // fs.writeFileSync(filePath, JSON.stringify(listArr))
     }
 
-    delete() {
-        let self = this
-        let listArr = self.getAll()
-        let newArr = listArr.filter(element => element.name !== this.name)
-        fs.writeFileSync(filePath, JSON.stringify(newArr))
-    }
-
-    update(value) {
-        let self = this
-        let listArr = self.getAll()
-
-        if (exists(listArr, value)) {
-            throw 500
-        }
-
-        let newArr = listArr.map(element => {
-            console.log(this.name.toString().trim(), element.name.toString().trim())
-            if (this.name.toString().trim() === element.name.toString().trim()) {
-                return {
-                    "name": value
-                }
-            } else {
-                return element
+    async delete() {
+        try {
+            const query = {
+                name: this.name
             }
-        })
-        fs.writeFileSync(filePath, JSON.stringify(newArr))
-        return true
+             
+            const result = await this.items.deleteOne(query)
+
+            if (result.deletedCount === 1) {
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            return false
+        }
+    }
+
+    async update(value) {
+        try {
+            let self = this
+            let listArr = await self.getAll()
+
+            if (exists(listArr, value) && this.name.toString().trim() === element.name.toString().trim()) {
+                throw 500
+            }
+
+            const filter = {
+                name: this.name
+            }
+            const options = {
+                upsert: true
+            }
+
+            const updateDoc = {
+                $set: {
+                    name: value,
+                },
+            }
+
+            await this.items.updateOne(filter, updateDoc, options)
+            return true
+        } catch (error) {
+            return false
+        }
     }
 }
 
