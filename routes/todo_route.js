@@ -1,9 +1,12 @@
 const express = require('express')
-const { getTodos, saveTodos, deleteTodo, updateTodo } = require('../controllers/todos')
+
+const { getTodos, saveTodos, deleteTodo, updateTodo, getTodosApi } = require('../controllers/todos')
 
 const router = express.Router()
 
 router.get('/', getTodos)
+
+router.get('/api/getAll', getTodosApi)
 
 router.post('/todo', saveTodos)
 

@@ -1,14 +1,15 @@
 const express = require('express')
 const path = require('path')
-const bodyParser = require('body-parser')
 const { mongoConnect } = require('./database/database')
+const cors = require('cors')
 
 const todoRoute = require('./routes/todo_route')
 
 const app = express()
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.use('/assets', express.static(path.join(process.cwd(), 'public')))
 app.use('/node_modules', express.static(path.join(process.cwd(), 'node_modules')));
@@ -19,5 +20,5 @@ app.set('view engine', 'pug')
 app.use(todoRoute);
 
 mongoConnect(() => {
-    app.listen(3000)
+    app.listen(5000)
 })
