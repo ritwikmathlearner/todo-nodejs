@@ -17,7 +17,7 @@ document.getElementById('tasks').addEventListener('click', async e => {
     if (e.target.classList.contains('delete')) {
         name = e.target.getAttribute('value')
         try {
-            let response = await fetch('http://localhost:3000/todo', {
+            let response = await fetch('http://localhost:5000/todo', {
                 method: 'DELETE',
                 headers: new Headers({
                     'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ document.getElementById('tasks').addEventListener('click', async e => {
                 updateParagraph(content, [paragraph, editContainer], true)
 
                 try {
-                    const response = await fetch('http://localhost:3000/todo', {
+                    const response = await fetch('http://localhost:5000/todo', {
                         method: 'PATCH',
                         headers: new Headers({
                             'Content-Type': 'application/json'

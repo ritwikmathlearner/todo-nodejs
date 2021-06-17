@@ -33,8 +33,10 @@ class ToDo {
             const result = await this.items.insertOne({
                 name: this.name
             })
+            return result.ops[0]
         } catch (err) {
-            console.log(err)
+            console.log(err.message)
+            return null
         }
     }
 

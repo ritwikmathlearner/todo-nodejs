@@ -12,6 +12,20 @@ exports.getTodosApi = (req, res, next) => {
     })
 }
 
+exports.saveTodosApi = async (req, res, next) => {
+    try {
+        let name = req.body.taskname
+        let result = await todo.setDB().setName(name).save()
+        
+        if (result && result.length < 1)
+            throw new Error('Save unsuccessful')
+
+        res.header('Access-Control-Allow-Origin', '*').status(202).json(result)
+    } catch (err) {
+        res.status(500).json("Save unsuccessful")
+    }
+}
+
 exports.saveTodos = (req, res, next) => {
     let name = req.body.taskname
     todo.setDB().setName(name).save()
