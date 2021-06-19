@@ -2,13 +2,13 @@ const MongoClient = require('mongodb').MongoClient;
 
 let conn;
 
-exports.mongoConnect = (callback) => {
+exports.mongoConnect = async (callback) => {
     try {
-        main()
+        await main()
+        callback()
     } catch(err) {
         console.log(err)
     }
-    callback()
 }
 
 async function main(){
