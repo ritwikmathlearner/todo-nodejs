@@ -1,15 +1,17 @@
 const express = require('express')
 const path = require('path')
-const {
-    mongoConnect
-} = require('./database/database')
 const cors = require('cors')
-const { celebrate, Joi, errors, Segments } = require('celebrate');
+const {
+    errors
+} = require('celebrate')
+const mongoose = require('mongoose')
+
+const app = express()
 
 const todoRoute = require('./routes/todo_route')
 const apiTodoRoute = require('./routes/api_route')
 
-const app = express()
+const DbConnectionString = 'mongodb+srv://M29dQHmaYs8ML0Fx:M29dQHmaYs8ML0Fx@ritwikmathcluster.og99m.mongodb.net/mytodo?retryWrites=true&w=majority'
 
 app.use(cors())
 app.use(express.urlencoded({
@@ -26,13 +28,14 @@ app.set('view engine', 'pug')
 app.use(todoRoute);
 app.use('/api', apiTodoRoute);
 app.use(errors())
-app.use((error, req, res, next) => {
-    if(error.joi) {
-        res.status(400).json({error: error.joi.message})
-    }
-    res.status(400).json({error: error})
-})
 
-mongoConnect(() => {
-    app.listen(5000)
-})
+mongoose.connect(DbConnectionString, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(response => {
+        app.listen(5000)
+    })
+    .catch(err => {
+        console.log(err)
+    })

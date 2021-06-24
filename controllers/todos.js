@@ -1,13 +1,13 @@
 const todo = require('../model/todos')
 
 exports.getTodos = (req, res, next) => {
-    todo.setDB().getAll().then(toDos => {
+    todo.getAll().then(toDos => {
         res.render('list', { "todos": toDos })
     })
 }
 
 exports.getTodosApi = (req, res, next) => {
-    todo.setDB().getAll().then(toDos => {
+    todo.getAll().then(toDos => {
         res.header('Access-Control-Allow-Origin', '*').status(200).json(toDos)
     })
 }
@@ -15,9 +15,8 @@ exports.getTodosApi = (req, res, next) => {
 exports.saveTodosApi = async (req, res, next) => {
     try {
         let name = req.body.taskname
-        let result = await todo.setDB().setName(name).save()
-        
-        if (result && result.length < 1)
+        let result = await todo.setName(name).save()
+        if (typeof result === "undefined" || !result || result.length < 1)
             throw new Error('Save unsuccessful')
 
         res.header('Access-Control-Allow-Origin', '*').status(202).json(result)
@@ -28,14 +27,14 @@ exports.saveTodosApi = async (req, res, next) => {
 
 exports.saveTodos = (req, res, next) => {
     let name = req.body.taskname
-    todo.setDB().setName(name).save()
+    let response = todo.setName(name).save()
     res.redirect('/')
 }
 
 exports.deleteTodo = (req, res, next) => {
     try {
         let name = req.body.taskname
-        let result = todo.setDB().setName(name).delete()
+        let result = todo.setName(name).delete()
 
         if (!result)
             throw new Error('Delete unsuccessful')
@@ -54,15 +53,13 @@ exports.updateTodo = (req, res, next) => {
         if (!req.body.newname)
             throw new Error('Update unsuccessful')
 
-        let result = todo.setDB().setName(name).update(newName)
+        let result = todo.setName(name).update(newName)
 
         if (!result)
             throw new Error('Update unsuccessful')
 
         res.header('Access-Control-Allow-Origin', '*').status(202).json("Updated successfully")
     } catch (err) {
-        console.log(err)
         res.header('Access-Control-Allow-Origin', '*').status(500).json("Update unsuccessful")
     }
-    res.end()
 }

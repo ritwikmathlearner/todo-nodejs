@@ -7,17 +7,17 @@ const {
     getTodosApi,
     saveTodosApi
 } = require('../controllers/todos')
-const { toDoSchemaApi } = require('../validation/ToDo')
+const { toDoUpdateSchemaApi, toDoSaveSchemaApi } = require('../validation/ToDo')
 
 const router = express.Router()
 
 
 router.get('/getAll', getTodosApi)
 
-router.post('/todo', celebrate(toDoSchemaApi), saveTodosApi)
+router.post('/todo', celebrate(toDoSaveSchemaApi), saveTodosApi)
 
 router.delete('/todo', deleteTodo)
 
-router.patch('/todo', celebrate(toDoSchemaApi), updateTodo)
+router.patch('/todo', celebrate(toDoUpdateSchemaApi), updateTodo)
 
 module.exports = router;

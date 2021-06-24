@@ -1,19 +1,15 @@
-const fs = require('fs')
-const path = require('path')
-const {
-    mongoConnect,
-    getDB
-} = require('../database/database')
+const mongoose = require('mongoose')
 
+const schema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    }
+})
 
-const filePath = path.join(process.cwd(), 'model', 'todo.json')
+const ToDoModel = mongoose.model('todo', schema)
 
 class ToDo {
-    setDB() {
-        this.items = getDB().collection('item')
-        return this
-    }
-
     setName(name) {
         this.name = name
         return this
@@ -21,7 +17,7 @@ class ToDo {
 
     async getAll() {
         try {
-            return await this.items.find({}).toArray()
+            return await ToDoModel.find({})
         } catch (err) {
             console.log(err)
         }
@@ -30,12 +26,12 @@ class ToDo {
 
     async save() {
         try {
-            const result = await this.items.insertOne({
-                name: this.name
-            })
-            return result.ops[0]
+            if (!this.name) {
+                throw new Error('Empty')
+            }
+            let todo = await ToDoModel.create({ name: this.name })
+            return todo
         } catch (err) {
-            console.log(err.message)
             return null
         }
     }
@@ -45,8 +41,8 @@ class ToDo {
             const query = {
                 name: this.name
             }
-             
-            const result = await this.items.deleteOne(query)
+
+            const result = await ToDoModel.deleteOne(query)
 
             if (result.deletedCount === 1) {
                 return true
@@ -80,7 +76,7 @@ class ToDo {
                 },
             }
 
-            await this.items.updateOne(filter, updateDoc, options)
+            await ToDoModel.updateOne(filter, updateDoc, options)
             return true
         } catch (error) {
             return false
