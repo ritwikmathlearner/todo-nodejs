@@ -11,7 +11,7 @@ const app = express()
 const todoRoute = require('./routes/todo_route')
 const apiTodoRoute = require('./routes/api_route')
 
-const DbConnectionString = 'mongodb+srv://M29dQHmaYs8ML0Fx:M29dQHmaYs8ML0Fx@ritwikmathcluster.og99m.mongodb.net/mytodo?retryWrites=true&w=majority'
+const DbConnectionString = 'mongodb://localhost:27017/mytodo?retryWrites=true&w=majority'
 
 app.use(cors())
 app.use(express.urlencoded({
